@@ -3,16 +3,19 @@ import { StyleSheet, Text, View } from "react-native";
 import CustomButton from "./components/CustomButton";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useState } from 'react';
-import { store } from './store/store';
-import { Provider, useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from './store/counter/counterSlice'
+import React, { useState } from "react";
+import store from "./store/store";
+import { Provider, useSelector, useDispatch } from "react-redux";
+import { decrement, increment } from "./store/counter/counterSlice";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
+let persistor = persistStore(store);
 
-function HomeScreen({navigation }) {
+function HomeScreen({ navigation }) {
   // const [count, setCount] = useState(0);
-  const count = useSelector((state) => state.counter.value)
-  const dispatch = useDispatch()
+  const count = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.container}>
@@ -24,23 +27,23 @@ function HomeScreen({navigation }) {
         }}
         fullWidth={true}
       />
-      <View style={{marginTop: 20}}></View>
+      <View style={{ marginTop: 20 }}></View>
       <CustomButton
         text={"Increment"}
         onPress={() => {
-          dispatch(increment())
+          dispatch(increment());
         }}
         fullWidth={true}
       />
-       <View style={{marginTop: 20}}></View>
+      <View style={{ marginTop: 20 }}></View>
       <CustomButton
         text={"Decrement"}
         onPress={() => {
-          dispatch(decrement())
+          dispatch(decrement());
         }}
         fullWidth={true}
       />
-<Text style={{fontSize: 25}}>{count}</Text>
+      <Text style={{ fontSize: 25 }}>{count}</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -68,12 +71,14 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <Provider store={store}>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Details" component={DetailsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 }
