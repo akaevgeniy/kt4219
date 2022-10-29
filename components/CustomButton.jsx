@@ -4,7 +4,7 @@ export default function CustomButton({ text, onPress, fullWidth }) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.container, fullWidth ? { width: "100%" } : {}]}
+      style={[styles.container, !!fullWidth ? { width: "100%" } : {}]}
     >
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
