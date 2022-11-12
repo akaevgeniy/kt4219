@@ -1,7 +1,15 @@
-import { configureStore,} from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "./counter/counterSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistReducer } from "redux-persist";
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import { combineReducers } from "redux";
 
 // export const store = configureStore({
@@ -23,7 +31,12 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export default store;
